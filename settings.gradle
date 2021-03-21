@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name = "SSDI_Microsoft_API"
