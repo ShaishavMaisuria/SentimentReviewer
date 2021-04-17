@@ -1,14 +1,19 @@
 package com.example.ssdi_microsoft_api;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -51,26 +56,78 @@ public class DisplayScreen extends Fragment {
 
     }
 
+    EditText editTextUserInput;
+    TextView resultMicroSoftApi;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_display_screen, container, false);
 
-        try {
-            getSentimentalScore();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        String id = "123";
+        String text="We love this trail and make the trip every year. I  hate everyone, I hate this, I hate that, I dont like goldie";
+        editTextUserInput=view.findViewById(R.id.editTextuserInput);
+
+        resultMicroSoftApi=view.findViewById(R.id.textViewDisplayResult);
+        view.findViewById(R.id.buttonSubmitQuery).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String userInput=editTextUserInput.getText().toString();
+                if(userInput.isEmpty()){
+                    Toast.makeText(getContext(),"Please write something before Submitting",Toast.LENGTH_LONG);
+                } else {
+                    try {
+                        String jsonFormatted = getGsonFormattedData(userInput, id);
+                        getSentimentalScore(jsonFormatted);
+
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            }
+        });
+
+
+        view.findViewById(R.id.buttonLogOut).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mlistener.logout();
+            }
+        });
+
 
         return view;
 
     }
 
+private String getGsonFormattedData(String text, String id) {
+    String json= "     {\n" +
+            "        \"documents\": [\n" +
+            "            {\n" +
+            "                \"language\": \"en\",\n" +
+            "                \"id\": \""+id+"\",\n" +
+            "                \"text\": \""+ text +"\"\n"   +
+            "            }" +
+            "        ]\n" +
+            "    }   ";
+
+
+        Log.d(TAG,"jsonFormated String = "+json);
+    return json;
+}
+
+
+
+
+
     String TAG = "sentimentalScore";
     private final OkHttpClient client = new OkHttpClient();
 
-    void getSentimentalScore() throws IOException {
+    void getSentimentalScore(String jsonFormattedString) throws IOException {
 
 
         String targetURL= "https://shaishav.cognitiveservices.azure.com/text/analytics/v3.1-preview.4/sentiment";
@@ -85,7 +142,7 @@ public class DisplayScreen extends Fragment {
                 .addHeader("Content-Type", "application/json;charset=UTF-8")
                 .addHeader("Accept", "application/json")
 //                .post(formBody)
-                .post(RequestBody.create(MEDIA_TYPE_MARKDOWN,Data.variable))
+                .post(RequestBody.create(MEDIA_TYPE_MARKDOWN,jsonFormattedString))
                 .build();
 
 
@@ -103,6 +160,9 @@ public class DisplayScreen extends Fragment {
 
                     Log.d(TAG, "OnSucccesful Response" + body.toString());
 
+                    resultMicroSoftApi.setText(body.toString());
+
+
                 } else {
 
                     Log.d(TAG, "OnSucccesful Fialure repsponse" + body.toString());
@@ -112,4 +172,24 @@ public class DisplayScreen extends Fragment {
 
 
     }
+
+
+    displayScreenListener mlistener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof displayScreenListener){
+            mlistener=(displayScreenListener)context;
+        }else{
+            throw new RuntimeException(context.toString()+"Must implement displayScreenListener");
+        }
+    }
+
+    interface displayScreenListener {
+        void logout();
+    }
+
+
+
 }

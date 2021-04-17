@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "917380467107",
+    "project_id": "ssdiproject",
+    "storage_bucket": "ssdiproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917380467107:android:bd7f6c84fbe49a3932b216",
+        "android_client_info": {
+          "package_name": "com.example.ssdi_microsoft_api"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "917380467107-ptfb7fqj8avo52sfsjn7ljq3im12mm9f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8PaGM67gYBW_RctstEHkW5-DScEQuH-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "917380467107-ptfb7fqj8avo52sfsjn7ljq3im12mm9f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
