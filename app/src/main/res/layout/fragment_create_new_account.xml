@@ -5,8 +5,9 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:padding="16dp"
-    tools:context=".CreateNewAccount" >
+    tools:context=".CreateNewAccount">
 
     <EditText
         android:id="@+id/editTextNewAccountEmailAddress"
@@ -40,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/StringSubmit"
+        app:backgroundTint="#2196F3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNewAccountPassword" />
