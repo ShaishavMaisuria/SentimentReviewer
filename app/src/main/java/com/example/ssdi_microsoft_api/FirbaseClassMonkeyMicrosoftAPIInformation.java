@@ -6,11 +6,33 @@ import java.util.HashMap;
 public class FirbaseClassMonkeyMicrosoftAPIInformation {
 
     String userSentence;
+    String commentID;
 
     ArrayList<Double> microSoftApiArrayPosNegNet=new ArrayList<>();
     String microsoftAPISentimentalDecision;
     String monkeyAPISentimentalDecision;
     String monkeyAPIScore;
+
+    public String getCommentID() {
+        return commentID;
+    }
+
+    @Override
+    public String toString() {
+        return "FirbaseClassMonkeyMicrosoftAPIInformation{" +
+                "userSentence='" + userSentence + '\'' +
+                ", commentID='" + commentID + '\'' +
+                ", microSoftApiArrayPosNegNet=" + microSoftApiArrayPosNegNet +
+                ", microsoftAPISentimentalDecision='" + microsoftAPISentimentalDecision + '\'' +
+                ", monkeyAPISentimentalDecision='" + monkeyAPISentimentalDecision + '\'' +
+                ", monkeyAPIScore='" + monkeyAPIScore + '\'' +
+                '}';
+    }
+
+    public void setCommentID(String commentID) {
+        this.commentID = commentID;
+    }
+
     public FirbaseClassMonkeyMicrosoftAPIInformation() {
     }
 
@@ -63,15 +85,4 @@ public class FirbaseClassMonkeyMicrosoftAPIInformation {
         this.microSoftApiArrayPosNegNet = microSoftApiArrayPosNegNet;
     }
 
-    @Override
-    public String toString() {
-        return "firbaseClassMonkeyMicrosoftAPIInformation{" +
-                "userSentence='" + userSentence + '\'' +
-
-                ", microSoftApiArrayPosNegNet=" + microSoftApiArrayPosNegNet +
-                ", microsoftAPISentimentalDecision='" + microsoftAPISentimentalDecision + '\'' +
-                ", monkeyAPISentimentalDecision='" + monkeyAPISentimentalDecision + '\'' +
-                ", monkeyAPIScore='" + monkeyAPIScore + '\'' +
-                '}';
-    }
 }

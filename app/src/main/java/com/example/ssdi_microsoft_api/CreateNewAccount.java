@@ -191,12 +191,6 @@ mlistener.createNewAccountToLogin();
 
     }
 
-
-
-
-
-
-
  NewAccountListener mlistener;
 
     @Override

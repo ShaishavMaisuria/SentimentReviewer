@@ -5,11 +5,12 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/cloud"
     android:padding="16dp"
-    tools:context=".DisplayScreen" >
+    tools:context=".DisplayScreen">
 
     <TextView
-        android:id="@+id/textViewDisplayResult"
+        android:id="@+id/textViewMicrosoftEachComment"
         android:layout_width="302dp"
         android:layout_height="138dp"
         android:layout_marginTop="44dp"
@@ -27,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="Press to get score"
+        app:backgroundTint="@color/material_on_background_emphasis_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextuserInput" />
 
@@ -38,6 +40,7 @@
         android:ems="10"
         android:hint="Write Text"
         android:inputType="textPersonName"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -48,6 +51,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="52dp"
         android:text="Logout"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FAFAFA"
+        app:backgroundTint="@color/material_on_background_emphasis_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -58,12 +64,14 @@
         android:layout_height="25dp"
         android:layout_marginBottom="12dp"
         android:text="MicrosoftApi"
+        android:textColor="@color/black"
+        android:textColorHint="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/textViewDisplayResult"
-        app:layout_constraintEnd_toEndOf="@+id/textViewDisplayResult"
+        app:layout_constraintBottom_toTopOf="@+id/textViewMicrosoftEachComment"
+        app:layout_constraintEnd_toEndOf="@+id/textViewMicrosoftEachComment"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textViewDisplayResult" />
+        app:layout_constraintStart_toStartOf="@+id/textViewMicrosoftEachComment" />
 
     <TextView
         android:id="@+id/textView2"
@@ -71,17 +79,19 @@
         android:layout_height="31dp"
         android:layout_marginTop="9dp"
         android:text="Monkey Api"
+        android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/textViewDisplayResult"
-        app:layout_constraintStart_toStartOf="@+id/textViewDisplayResult"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDisplayResult" />
+        app:layout_constraintEnd_toEndOf="@+id/textViewMicrosoftEachComment"
+        app:layout_constraintStart_toStartOf="@+id/textViewMicrosoftEachComment"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMicrosoftEachComment" />
 
     <TextView
-        android:id="@+id/textViewMonkeyApi"
+        android:id="@+id/textViewMonkeyApiEachComment"
         android:layout_width="0dp"
         android:layout_height="146dp"
         android:text="Result"
+        android:textColorHint="#563C3C"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/textView2"
@@ -98,6 +108,8 @@
         android:layout_marginEnd="77dp"
         android:layout_marginRight="77dp"
         android:text="history"
+        android:textColorHint="#000000"
+        app:backgroundTint="@color/material_on_background_emphasis_medium"
         app:layout_constraintEnd_toStartOf="@+id/buttonSubmitQuery"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextuserInput" />

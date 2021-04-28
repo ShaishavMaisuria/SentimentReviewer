@@ -60,11 +60,11 @@ Double positive,neutral,negative;
     public String toString() {
         return
 
-                "sentiment='" + sentiment  +
-                "scoreMicrosoftAPI=" + scoreMicrosoftAPI +
-                "positive=" + positive +
-                "neutral=" + neutral +
-                "negative=" + negative
+                "sentiment Decision = " + sentiment  +"\n "+
+
+                "positive Score = " + positive +"\n "+
+                "neutral Score = " + neutral +"\n "+
+                "negative Score = " + negative
                 ;
     }
 

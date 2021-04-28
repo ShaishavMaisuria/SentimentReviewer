@@ -4,63 +4,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
+    android:layout_height="wrap_content"
+    android:background="@drawable/cloud"
     android:padding="16dp"
     tools:context=".LoginFragment">
 
     <EditText
         android:id="@+id/editTextNewAccountEmailAddress"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
+        android:layout_width="382dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="164dp"
         android:ems="10"
         android:hint="@string/StringEmail"
         android:inputType="textEmailAddress"
+        android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextNewAccountPassword"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="384dp"
+        android:layout_height="63dp"
         android:layout_marginTop="52dp"
         android:ems="10"
         android:hint="@string/StringPassword"
         android:inputType="textPassword"
 
         android:shadowRadius="160"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNewAccountEmailAddress" />
 
     <Button
         android:id="@+id/buttonNewAccountSubmit"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="311dp"
+        android:layout_height="61dp"
         android:layout_marginTop="24dp"
+        android:background="@drawable/arrow_shape"
+        android:padding="6dp"
+
+
         android:shadowColor="#AAA8A8"
-        android:shadowDx="12"
-        android:shadowDy="12"
-        android:shadowRadius="16"
         android:text="@string/StringLoginButton"
-        app:backgroundTint="#1183DE"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:backgroundTint="@color/material_on_background_emphasis_medium"
         app:cornerRadius="15dp"
+        app:iconTint="@color/material_on_background_emphasis_medium"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNewAccountPassword" />
 
     <Button
         android:id="@+id/buttonCreateNewAccontLogin"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="224dp"
+        android:layout_width="276dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="96dp"
         android:text="@string/StringCreateNewAccounnt"
         android:textColor="#000000"
         app:backgroundTint="#FFFFFF"
         app:cornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonNewAccountSubmit" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="302dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="72dp"
+        android:text="Welcome to Reviewer"
+        android:textColor="#020202"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

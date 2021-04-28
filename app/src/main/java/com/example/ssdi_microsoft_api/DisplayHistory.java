@@ -1,19 +1,19 @@
 package com.example.ssdi_microsoft_api;
 
+
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.EventListener;
@@ -77,7 +77,7 @@ public class DisplayHistory extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_display_history, container, false);
-
+        getActivity().setTitle("History");
         getFireStoreUserHistory();
 
         recyclerView = view.findViewById(R.id.recylerViewDisplayHistory);
@@ -88,7 +88,7 @@ public class DisplayHistory extends Fragment {
         recyclerView.setAdapter(adapter);
         return view;
     }
-ArrayList<FirbaseClassMonkeyMicrosoftAPIInformation> userHistoryListData = new ArrayList<>();
+    ArrayList<FirbaseClassMonkeyMicrosoftAPIInformation> userHistoryListData = new ArrayList<>();
 
     ArrayList<String> userHistoryCommentsList=new ArrayList<>();
     void getFireStoreUserHistory(){
@@ -98,84 +98,85 @@ ArrayList<FirbaseClassMonkeyMicrosoftAPIInformation> userHistoryListData = new A
         db.collection("userComments").document(mAuth.getCurrentUser().getUid()).collection("comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-               userHistoryListData.clear();
-               userHistoryCommentsList.clear();
-               for(QueryDocumentSnapshot document: value){
-                   Log.d(TAG,"FireStore Response"+document.getData());
-                   FirbaseClassMonkeyMicrosoftAPIInformation commentData=document.toObject(FirbaseClassMonkeyMicrosoftAPIInformation.class);
+                userHistoryListData.clear();
+                userHistoryCommentsList.clear();
+                for(QueryDocumentSnapshot document: value){
+                    Log.d(TAG,"FireStore Response"+document.getData());
+                    Log.d(TAG,"doucment Comment ID"+document.getId());
+                    FirbaseClassMonkeyMicrosoftAPIInformation commentData=document.toObject(FirbaseClassMonkeyMicrosoftAPIInformation.class);
+                    commentData.setCommentID(document.getId());
+                    userHistoryListData.add(commentData);
+                    userHistoryCommentsList.add(commentData.userSentence);
 
-                   userHistoryListData.add(commentData);
-                   userHistoryCommentsList.add(commentData.userSentence);
-
-                   Log.d(TAG,"userHistoryListData commentData "+commentData.toString());
+                    Log.d(TAG,"userHistoryListData commentData "+commentData.toString());
 
 
-               }
-               adapter.notifyDataSetChanged();
+                }
+                adapter.notifyDataSetChanged();
                 Log.d(TAG,"userhistoryList "+ userHistoryListData.toString());
                 Log.d(TAG,"userHistoryCommentsList "+userHistoryCommentsList.toString());
             }
         });
-        }
+    }
     RecyclerView recyclerView;
     LinearLayoutManager mLayoutManager;
 
-class UserEachCommentRecylerAdapter extends RecyclerView.Adapter<UserEachCommentRecylerAdapter.UserEachCommentRecylerView>{
-    ArrayList<FirbaseClassMonkeyMicrosoftAPIInformation> userCommentObject;
+    class UserEachCommentRecylerAdapter extends RecyclerView.Adapter<UserEachCommentRecylerAdapter.UserEachCommentRecylerView>{
+        ArrayList<FirbaseClassMonkeyMicrosoftAPIInformation> userCommentObject;
 
-    public UserEachCommentRecylerAdapter(ArrayList<FirbaseClassMonkeyMicrosoftAPIInformation> userHistoryListData) {
-        this.userCommentObject=userHistoryListData;
-    }
-
-    @NonNull
-    @Override
-    public UserEachCommentRecylerView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_user_each_comment, parent, false);
-        UserEachCommentRecylerView userViewHolder = new UserEachCommentRecylerView(view);
-
-        return userViewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull UserEachCommentRecylerView holder, int position) {
-    FirbaseClassMonkeyMicrosoftAPIInformation comment=userCommentObject.get(position);
-    holder.setupNewComments(comment);
-    holder.index=position;
-
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return userCommentObject.size();
-    }
-
-    public class UserEachCommentRecylerView extends RecyclerView.ViewHolder{
-        FirbaseClassMonkeyMicrosoftAPIInformation userComment;
-        TextView textViewdisplayComment;
-        int index;
-        public UserEachCommentRecylerView(@NonNull View itemView) {
-            super(itemView);
-            textViewdisplayComment=itemView.findViewById(R.id.textViewEachComment);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG,"adapter Listener"+index);
-                    Log.d(TAG,"Entire Comment Array Object"+userComment.toString());
-                    mlistener.displayhistoryCommentDetailHistory(userComment);
-                }
-            });
+        public UserEachCommentRecylerAdapter(ArrayList<FirbaseClassMonkeyMicrosoftAPIInformation> userHistoryListData) {
+            this.userCommentObject=userHistoryListData;
         }
-        public void setupNewComments(FirbaseClassMonkeyMicrosoftAPIInformation comment){
-            this.userComment=comment;
-            textViewdisplayComment.setText(this.userComment.userSentence);
+
+        @NonNull
+        @Override
+        public UserEachCommentRecylerView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_user_each_comment, parent, false);
+            UserEachCommentRecylerView userViewHolder = new UserEachCommentRecylerView(view);
+
+            return userViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull UserEachCommentRecylerView holder, int position) {
+            FirbaseClassMonkeyMicrosoftAPIInformation comment=userCommentObject.get(position);
+            holder.setupNewComments(comment);
+            holder.index=position;
+
 
         }
+
+        @Override
+        public int getItemCount() {
+            return userCommentObject.size();
+        }
+
+        public class UserEachCommentRecylerView extends RecyclerView.ViewHolder{
+            FirbaseClassMonkeyMicrosoftAPIInformation userComment;
+            TextView textViewdisplayComment;
+            int index;
+            public UserEachCommentRecylerView(@NonNull View itemView) {
+                super(itemView);
+                textViewdisplayComment=itemView.findViewById(R.id.textViewEachComment);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG,"adapter Listener"+index);
+                        Log.d(TAG,"Entire Comment Array Object"+userComment.toString());
+                        mlistener.displayhistoryCommentDetailHistory(userComment.commentID);
+                    }
+                });
+            }
+            public void setupNewComments(FirbaseClassMonkeyMicrosoftAPIInformation comment){
+                this.userComment=comment;
+                textViewdisplayComment.setText(this.userComment.userSentence);
+
+            }
+        }
+
+
     }
-
-
-}
 
     DisplayHistoryListener mlistener;
 
@@ -190,7 +191,7 @@ class UserEachCommentRecylerAdapter extends RecyclerView.Adapter<UserEachComment
     }
 
     interface DisplayHistoryListener {
-        void displayhistoryCommentDetailHistory(FirbaseClassMonkeyMicrosoftAPIInformation commentDetails);
+        void displayhistoryCommentDetailHistory(String commentID);
 
     }
 }

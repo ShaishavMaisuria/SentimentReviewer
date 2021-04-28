@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.LoginListener , DisplayHistory.DisplayHistoryListener, CreateNewAccount.NewAccountListener , DisplayScreen.displayScreenListener {
+public class MainActivity extends AppCompatActivity implements LoginFragment.LoginListener ,DisplayHistory.DisplayHistoryListener, CreateNewAccount.NewAccountListener , DisplayScreen.displayScreenListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +54,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
     }
 
     @Override
-    public void displayhistoryCommentDetailHistory(FirbaseClassMonkeyMicrosoftAPIInformation commentDetails) {
+    public void displayhistoryCommentDetailHistory(String commentID) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.rootView ,new DisplayHistory())//issue that firbase will not accept serlizable
+                .replace(R.id.rootView ,CommentDetailHistoryFragment.newInstance(commentID))//issue that firbase will not accept serlizable
                 .addToBackStack(null)
                 .commit();
     }

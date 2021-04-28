@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+
+
+    <!-- This rectangle for the top arrow edge -->
+    <!-- Its color should be the same as the layout's background -->
+
+
+    <!-- This rectangle for the lower arrow edge -->
+    <!-- Its color should be the same as the layout's background -->
+
+    <item
+        android:top="1dp"
+        android:bottom="10dp"
+        android:right="12dp">
+        <rotate
+            android:fromDegrees="1">
+            <shape android:shape="oval">
+                <solid android:color="#ffffff" />
+            </shape>
+        </rotate>
+    </item>
+
+</layer-list>

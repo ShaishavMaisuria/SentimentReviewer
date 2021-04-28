@@ -1,47 +1,50 @@
 package com.example.ssdi_microsoft_api;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CommentDetailHistoryFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApiNotAvailableException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+
 public class CommentDetailHistoryFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
+    private static final String ARG_PARAM1 = "CommentDetailHistoryFragment";
+    private static final String TAG = "CommentDetailHistoryFragment";
+
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String mcommentID;
+
 
     public CommentDetailHistoryFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CommonetDetailHistoryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CommentDetailHistoryFragment newInstance(String param1, String param2) {
+
+    public static CommentDetailHistoryFragment newInstance(String param1) {
         CommentDetailHistoryFragment fragment = new CommentDetailHistoryFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,15 +53,55 @@ public class CommentDetailHistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mcommentID = getArguments().getString(ARG_PARAM1);
+
         }
     }
-
+    TextView usercommentTextView;
+    TextView microsoftApiTextView;
+    TextView monkeyAPITextView;
+    @SuppressLint("LongLogTag")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_commonet_detail_history, container, false);
+        View  view= inflater.inflate(R.layout.fragment_commonet_detail_history, container, false);
+       Log.d(TAG,"comment ID "+mcommentID);
+        getActivity().setTitle("Selected History Comment");
+       usercommentTextView=view.findViewById(R.id.textViewEachUserComment);
+       microsoftApiTextView=view.findViewById(R.id.textViewMicrosoftEachComment);
+       monkeyAPITextView=view.findViewById(R.id.textViewMonkeyApiEachComment);
+       getfirebaseComment();
+        return view;
     }
+
+    void getfirebaseComment(){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        db.collection("userComments").document(mAuth.getCurrentUser().getUid()).collection("comments").document(mcommentID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @SuppressLint("LongLogTag")
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+                        FirbaseClassMonkeyMicrosoftAPIInformation commentObject=document.toObject(FirbaseClassMonkeyMicrosoftAPIInformation.class);
+                        Log.d(TAG, "commentObject data: " + commentObject.toString());
+                        usercommentTextView.setText(commentObject.userSentence);
+                        microsoftApiTextView.setText("Sentimental Decision = "+commentObject.microsoftAPISentimentalDecision+"Positive = "+ commentObject.microSoftApiArrayPosNegNet.get(0) +"\n Negative = "+
+                                commentObject.microSoftApiArrayPosNegNet.get(1)+"\n Neutral = "+commentObject.microSoftApiArrayPosNegNet.get(2));
+                        monkeyAPITextView.setText("Sentimental Decision = " + commentObject.userSentence + "\n Sentimental Score = "+commentObject.monkeyAPIScore);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+        }
 }

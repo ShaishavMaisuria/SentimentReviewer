@@ -4,7 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +20,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -25,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -71,41 +79,52 @@ public class DisplayScreen extends Fragment {
     String userInput;
     Boolean monkeyBool=false;
     Boolean microsoftBool=false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_display_screen, container, false);
-
-
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        getActivity().setTitle("Welcome!!! " + mAuth.getCurrentUser().getDisplayName());
         String id = "123";
 
         editTextUserInput=view.findViewById(R.id.editTextuserInput);
-        textViewmonkeyApi=view.findViewById(R.id.textViewMonkeyApi);
-        resultMicroSoftApi=view.findViewById(R.id.textViewDisplayResult);
+        textViewmonkeyApi=view.findViewById(R.id.textViewMonkeyApiEachComment);
+        resultMicroSoftApi=view.findViewById(R.id.textViewMicrosoftEachComment);
 
         view.findViewById(R.id.buttonHistory).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
+
+
                 if(monkeyBool && microsoftBool)
                 {
-                    if(userInput.isEmpty()){
-                        Toast.makeText(getActivity(),"Please write something before Submitting", LENGTH_LONG);
-                    } else {
-                        FirbaseClassMonkeyMicrosoftAPIInformation firebaseObject = new FirbaseClassMonkeyMicrosoftAPIInformation(
-                                userInput,
-                                fullSentenceAnalysisMicrosoft.scoreMicrosoftAPI,
-                                fullSentenceAnalysisMicrosoft.sentiment,
-                                fullSentenceAnalysisMonkey.tag_name,
-                                fullSentenceAnalysisMonkey.confidence);
-                        giveToFirebase(firebaseObject);
-                        mlistener.displayHistory();
-                    }
 
+                    monkeyBool=false;
+                    microsoftBool=false;
 
-                }else{
-                    Toast.makeText(getActivity(),"API Loading Click after few Seconds",LENGTH_LONG).show();
+                    FirbaseClassMonkeyMicrosoftAPIInformation firebaseObject = new FirbaseClassMonkeyMicrosoftAPIInformation(
+                            userInput,
+                            fullSentenceAnalysisMicrosoft.scoreMicrosoftAPI,
+                            fullSentenceAnalysisMicrosoft.sentiment,
+                            fullSentenceAnalysisMonkey.tag_name,
+                            fullSentenceAnalysisMonkey.confidence);
+                    giveToFirebase(firebaseObject);
+                    mlistener.displayHistory();
+                }else if(editTextUserInput.getText().toString().isEmpty()){
+                    mlistener.displayHistory();
+                    }else {
+                    Toast.makeText(getActivity(),"API Loading",LENGTH_LONG).show();
                 }
+
+
+
+
+
             }
         });
         view.findViewById(R.id.buttonSubmitQuery).setOnClickListener(new View.OnClickListener() {
@@ -129,6 +148,9 @@ public class DisplayScreen extends Fragment {
                         getSentimentalScore(jsonFormattedMicrosoft);
                         String jsonFormmattedMonkey=getMonkeyUserData(userInput);
                         getMonkey(jsonFormmattedMonkey);
+//                        if(userInput.isEmpty()){
+//                            Toast.makeText(getActivity(),"Please write something before Submitting", LENGTH_LONG);
+//                        } else {
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -347,6 +369,7 @@ Log.d("Monkey","MonkeyDAta"+jsonFormattedData);
         void logout();
         void displayHistory();
     }
-    }
+
+}
 
 

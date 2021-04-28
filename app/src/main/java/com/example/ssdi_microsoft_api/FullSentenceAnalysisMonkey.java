@@ -35,8 +35,8 @@ public class FullSentenceAnalysisMonkey {
     @Override
     public String toString() {
         return
-                "tag_name= " + tag_name + "\n" +
-                "confidence= " + confidence;
+                "sentiment Decision =  " + tag_name + "\n" +
+                "Score = " + confidence;
     }
 
     public String getTag_name() {
