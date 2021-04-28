@@ -5,13 +5,15 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:padding="16dp"
-    tools:context=".LoginFragment" >
+    tools:context=".LoginFragment">
 
     <EditText
         android:id="@+id/editTextNewAccountEmailAddress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="88dp"
         android:ems="10"
         android:hint="@string/StringEmail"
         android:inputType="textEmailAddress"
@@ -23,10 +25,12 @@
         android:id="@+id/editTextNewAccountPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="52dp"
         android:ems="10"
         android:hint="@string/StringPassword"
         android:inputType="textPassword"
+
+        android:shadowRadius="160"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNewAccountEmailAddress" />
@@ -35,8 +39,14 @@
         android:id="@+id/buttonNewAccountSubmit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
+        android:shadowColor="#AAA8A8"
+        android:shadowDx="12"
+        android:shadowDy="12"
+        android:shadowRadius="16"
         android:text="@string/StringLoginButton"
+        app:backgroundTint="#1183DE"
+        app:cornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextNewAccountPassword" />
@@ -45,10 +55,11 @@
         android:id="@+id/buttonCreateNewAccontLogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="224dp"
         android:text="@string/StringCreateNewAccounnt"
         android:textColor="#000000"
         app:backgroundTint="#FFFFFF"
+        app:cornerRadius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonNewAccountSubmit" />

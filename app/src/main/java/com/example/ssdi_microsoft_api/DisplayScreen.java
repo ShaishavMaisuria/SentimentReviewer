@@ -1,7 +1,6 @@
 package com.example.ssdi_microsoft_api;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,35 +18,24 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.nio.Buffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 //import com.google.gson.JsonArray;
 //import com.google.gson.JsonElement;
@@ -70,7 +58,7 @@ public class DisplayScreen extends Fragment {
         // Required empty public constructor
     }
 
-
+    private static final String TAG = "DisplayScreen";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +69,8 @@ public class DisplayScreen extends Fragment {
     TextView resultMicroSoftApi;
     TextView textViewmonkeyApi;
     String userInput;
+    Boolean monkeyBool=false;
+    Boolean microsoftBool=false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -89,18 +79,52 @@ public class DisplayScreen extends Fragment {
 
 
         String id = "123";
-        String text="We love this trail and make the trip every year. I  hate everyone, I hate this, I hate that, I dont like goldie";
+
         editTextUserInput=view.findViewById(R.id.editTextuserInput);
         textViewmonkeyApi=view.findViewById(R.id.textViewMonkeyApi);
         resultMicroSoftApi=view.findViewById(R.id.textViewDisplayResult);
+
+        view.findViewById(R.id.buttonHistory).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(monkeyBool && microsoftBool)
+                {
+                    if(userInput.isEmpty()){
+                        Toast.makeText(getActivity(),"Please write something before Submitting", LENGTH_LONG);
+                    } else {
+                        FirbaseClassMonkeyMicrosoftAPIInformation firebaseObject = new FirbaseClassMonkeyMicrosoftAPIInformation(
+                                userInput,
+                                fullSentenceAnalysisMicrosoft.scoreMicrosoftAPI,
+                                fullSentenceAnalysisMicrosoft.sentiment,
+                                fullSentenceAnalysisMonkey.tag_name,
+                                fullSentenceAnalysisMonkey.confidence);
+                        giveToFirebase(firebaseObject);
+                        mlistener.displayHistory();
+                    }
+
+
+                }else{
+                    Toast.makeText(getActivity(),"API Loading Click after few Seconds",LENGTH_LONG).show();
+                }
+            }
+        });
         view.findViewById(R.id.buttonSubmitQuery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 userInput=editTextUserInput.getText().toString();
-                if(userInput.isEmpty()){
-                    Toast.makeText(getContext(),"Please write something before Submitting",Toast.LENGTH_LONG);
+
+                 String userInputValidation=editTextUserInput.getText().toString();
+                Log.d(TAG,"userInputValidation   = "+userInputValidation + userInputValidation.isEmpty());
+                if(userInputValidation.isEmpty()){
+                    Toast.makeText(getActivity(),"Please write something before Submitting", LENGTH_LONG).show();
+                    Log.d(TAG,"userInputValidation not satified");
                 } else {
                     try {
+                        Log.d(TAG,"userInput  satified = "+userInput);
+                        Log.d(TAG,"userInputValidation  satified = "+userInputValidation);
+                        userInput=userInputValidation;
+                        Log.d(TAG,"userInput  satified = "+userInput);
+                        textViewmonkeyApi.setText("Waiting For API Response");
+                        resultMicroSoftApi.setText("Waiting For API Response");
                         String jsonFormattedMicrosoft = getGsonFormattedData(userInput, id);
                         getSentimentalScore(jsonFormattedMicrosoft);
                         String jsonFormmattedMonkey=getMonkeyUserData(userInput);
@@ -127,7 +151,22 @@ public class DisplayScreen extends Fragment {
         return view;
 
     }
-
+    void giveToFirebase(FirbaseClassMonkeyMicrosoftAPIInformation firbaseClassMonkeyMicrosoftAPIInformation){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        db.collection("userComments").document(mAuth.getCurrentUser().getUid()).collection("comments").document().set(firbaseClassMonkeyMicrosoftAPIInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d(TAG,"Message Sent");
+                if(task.isSuccessful()){
+                    Log.d(TAG,"Task Succesfull");
+                }else{
+                    Log.d(TAG,"Task UnSuccesfull");
+                    task.getException().printStackTrace();
+                }
+            }
+        });
+    }
 private String getGsonFormattedData(String text, String id) {
     String json= "     {\n" +
             "        \"documents\": [\n" +
@@ -151,9 +190,9 @@ private String getGsonFormattedData(String text, String id) {
 
 
 
-    String TAG = "sentimentalScore";
-    private final OkHttpClient client = new OkHttpClient();
 
+    private final OkHttpClient client = new OkHttpClient();
+    FullSentenceAnalysisMicrosoft fullSentenceAnalysisMicrosoft;
     void getSentimentalScore(String jsonFormattedString) throws IOException {
 
 
@@ -194,11 +233,11 @@ private String getGsonFormattedData(String text, String id) {
 
                         for(int i=0;i<documentList.length();i++){
                             if(i==0) {
-                                FullSentenceAnalysisMicrosoft fullSentenceAnalysisMicrosoft = new FullSentenceAnalysisMicrosoft(documentList.getJSONObject(0));
+                                 fullSentenceAnalysisMicrosoft = new FullSentenceAnalysisMicrosoft(documentList.getJSONObject(0));
                                 Log.d(TAG,"json object"+fullSentenceAnalysisMicrosoft.toString());
                                 resultMicroSoftApi.setText(fullSentenceAnalysisMicrosoft.toString());
+                                microsoftBool=true;
 
-                                giveToFirebase(fullSentenceAnalysisMicrosoft);
 
                                 }
                             }
@@ -219,38 +258,9 @@ private String getGsonFormattedData(String text, String id) {
 
     }
 
-void giveToFirebase(FullSentenceAnalysisMicrosoft fullSentenceAnalysisMicrosoftObject){
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    db.collection("userComments").document(mAuth.getCurrentUser().getUid()).set(fullSentenceAnalysisMicrosoftObject).addOnCompleteListener(new OnCompleteListener<Void>() {
-        @Override
-        public void onComplete(@NonNull Task<Void> task) {
-       Log.d(TAG,"Message Sent");
-       if(task.isSuccessful()){
-           Log.d(TAG,"Task Succesfull");
-       }else{
-           Log.d(TAG,"Task UnSuccesfull");
-           task.getException().printStackTrace();
-       }
-        }
-    });
-}
-    displayScreenListener mlistener;
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if(context instanceof displayScreenListener){
-            mlistener=(displayScreenListener)context;
-        }else{
-            throw new RuntimeException(context.toString()+"Must implement displayScreenListener");
-        }
-    }
 
-    interface displayScreenListener {
-        void logout();
-    }
-
+    //    This is monkey api code
     private String getMonkeyUserData(String userData){
 //String input="I hate this and that";
 
@@ -261,6 +271,7 @@ void giveToFirebase(FullSentenceAnalysisMicrosoft fullSentenceAnalysisMicrosoftO
                 "   }";
         return monkeyJson;
     }
+    FullSentenceAnalysisMonkey fullSentenceAnalysisMonkey;
 void getMonkey(String jsonFormattedData){
 
 
@@ -297,10 +308,11 @@ Log.d("Monkey","MonkeyDAta"+jsonFormattedData);
                 try {
                     JSONArray rootArray = new JSONArray(body);
                     Log.d("Monkey","Printing rootArray"+rootArray);
-                    FullSentenceAnalysisMonkey fullSentenceAnalysisMonkey= new FullSentenceAnalysisMonkey(rootArray);
+                    fullSentenceAnalysisMonkey= new FullSentenceAnalysisMonkey(rootArray);
                     Log.d("Monkey","fullSentence Anlaysis"+fullSentenceAnalysisMonkey.toString());
 
                     textViewmonkeyApi.setText(fullSentenceAnalysisMonkey.toString());
+                    monkeyBool=true;
 
 
                 } catch (JSONException e) {
@@ -315,10 +327,26 @@ Log.d("Monkey","MonkeyDAta"+jsonFormattedData);
             }
     });
 
+     }
 
 
 
+    displayScreenListener mlistener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof displayScreenListener){
+            mlistener=(displayScreenListener)context;
+        }else{
+            throw new RuntimeException(context.toString()+"Must implement displayScreenListener");
         }
+    }
+
+    interface displayScreenListener {
+        void logout();
+        void displayHistory();
+    }
     }
 
 

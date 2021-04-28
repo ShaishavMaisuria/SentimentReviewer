@@ -8,12 +8,15 @@ import com.google.gson.JsonObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import io.perfmark.Tag;
 
 public class FullSentenceAnalysisMicrosoft {
 
     private static final String TAG ="FullSentenceAnalysisMicrosoft" ;
     String id,sentiment,confidenceScores;
+    ArrayList<Double> scoreMicrosoftAPI = new ArrayList<>();
 Double positive,neutral,negative;
 
     public FullSentenceAnalysisMicrosoft() {
@@ -35,6 +38,10 @@ Double positive,neutral,negative;
         Log.d(TAG, "value object");
 
         this.positive=confidenceScoreObjct.getDouble("positive");
+
+        scoreMicrosoftAPI.add(this.positive);
+        scoreMicrosoftAPI.add(this.negative);
+        scoreMicrosoftAPI.add(this.neutral);
     }
 
 
@@ -52,11 +59,21 @@ Double positive,neutral,negative;
     @Override
     public String toString() {
         return
-                "sentiment= " + sentiment + '\n' +
-                " positive= " + positive + '\n' +
-                " neutral= " + neutral + '\n' +
-                " negative= " + negative ;
 
+                "sentiment='" + sentiment  +
+                "scoreMicrosoftAPI=" + scoreMicrosoftAPI +
+                "positive=" + positive +
+                "neutral=" + neutral +
+                "negative=" + negative
+                ;
+    }
+
+    public ArrayList<Double> getScoreMicrosoftAPI() {
+        return scoreMicrosoftAPI;
+    }
+
+    public void setScoreMicrosoftAPI(ArrayList<Double> scoreMicrosoftAPI) {
+        this.scoreMicrosoftAPI = scoreMicrosoftAPI;
     }
 
     public String getId() {
