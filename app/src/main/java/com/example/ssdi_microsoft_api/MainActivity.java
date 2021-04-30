@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
     }
 
     /* @createNewAccountToLogin
-     *  passing the fragement from CreateNewAccount to Login Fragment
+     *  passing the fragement from CreateNewAccount fragment to Login Fragment
      */
     @Override
     public void createNewAccountToLogin() {
