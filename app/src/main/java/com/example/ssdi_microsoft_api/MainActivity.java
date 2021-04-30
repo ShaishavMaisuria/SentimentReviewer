@@ -15,6 +15,9 @@ import android.os.Bundle;
  * 2) FIREBASE services might stop after 30 days, please contact me @smaisuri@uncc.edu to renew the service ( unfortunately we cannot renew in between)
  *
  *  Other important specification, The app is recommended to run on NEXUS 5X API 29 for performance measure
+ *
+ * How to run the project please take a look at the github
+ * https://github.com/ShaishavMaisuria/SSDI_Microsoft_API
  */
 public class MainActivity extends AppCompatActivity implements LoginFragment.LoginListener, DisplayHistory.DisplayHistoryListener, CreateNewAccount.NewAccountListener, DisplayScreen.displayScreenListener {
     /* @onCreate method is the main method run whenever the app is started it passess the view from activtiy to activity loginFragment
