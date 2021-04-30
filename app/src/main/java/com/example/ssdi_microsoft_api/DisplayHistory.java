@@ -24,7 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-/**
+/**   This class is used to display history from firebase firestore databases
  * A simple {@link Fragment} subclass.
  * Use the {@link DisplayHistory#newInstance} factory method to
  * create an instance of this fragment.

@@ -54,7 +54,7 @@ public class LoginFragment extends Fragment {
         editTextNewAccountPassword = view.findViewById(R.id.editTextNewAccountPassword);
         getActivity().setTitle("Login");
 
-        editTextNewAccountEmailAddress.setText("t@t.com");
+        editTextNewAccountEmailAddress.setText("ssdi6156@uncc.com");
         editTextNewAccountPassword.setText("test123");
         // find the view, use the view to find button, and create Listener whenever button is clicked we login using email and password
         view.findViewById(R.id.buttonNewAccountSubmit).setOnClickListener(new View.OnClickListener() {

@@ -13,6 +13,8 @@ import android.os.Bundle;
  * TWO THINGS to KEEP in mind
  * 1) APIs KEYS may expire please account me @smaisuri@uncc.edu for the keys of the project APIs
  * 2) FIREBASE services might stop after 30 days, please contact me @smaisuri@uncc.edu to renew the service ( unfortunately we cannot renew in between)
+ *
+ *  Other important specification, The app is recommended to run on NEXUS 5X API 29 for performance measure
  */
 public class MainActivity extends AppCompatActivity implements LoginFragment.LoginListener, DisplayHistory.DisplayHistoryListener, CreateNewAccount.NewAccountListener, DisplayScreen.displayScreenListener {
     /* @onCreate method is the main method run whenever the app is started it passess the view from activtiy to activity loginFragment

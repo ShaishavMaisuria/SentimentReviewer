@@ -26,7 +26,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**t
+ * This class is intended to create new accounts and navigate to appropriate pages
+ */
 public class CreateNewAccount extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match

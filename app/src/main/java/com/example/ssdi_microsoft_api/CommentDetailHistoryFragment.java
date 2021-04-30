@@ -23,7 +23,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
-
+/** This is class is used to show the each comment history details and help user know what is the scor obtained from apis in past
+ * all information is stored in firestore and therefore reterival of the data from firestore and displaying to the user screen
+ *
+ */
 public class CommentDetailHistoryFragment extends Fragment {
 
 
