@@ -74,34 +74,39 @@ public class CreateNewAccount extends Fragment {
     EditText editTexNewAccountName;
     EditText editTextNewAccountPassword;
     EditText editTextNewAccountEmailAddress;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_create_new_account, container, false);
-        getActivity().setTitle("Create New Account");
-         editTexNewAccountName=view.findViewById(R.id.editTexNewAccountName);
-         editTextNewAccountPassword=view.findViewById(R.id.editTextNewAccountPassword);
-         editTextNewAccountEmailAddress=view.findViewById(R.id.editTextNewAccountEmailAddress);
+        View view = inflater.inflate(R.layout.fragment_create_new_account, container, false);
+        try {
+            getActivity().setTitle("Create New Account");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        editTexNewAccountName = view.findViewById(R.id.editTexNewAccountName);
+        editTextNewAccountPassword = view.findViewById(R.id.editTextNewAccountPassword);
+        editTextNewAccountEmailAddress = view.findViewById(R.id.editTextNewAccountEmailAddress);
 
         view.findViewById(R.id.buttonNewAccountSubmit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String email=editTextNewAccountEmailAddress.getText().toString();
-                String password=editTextNewAccountPassword.getText().toString();
-                String name=editTexNewAccountName.getText().toString();
+                String email = editTextNewAccountEmailAddress.getText().toString();
+                String password = editTextNewAccountPassword.getText().toString();
+                String name = editTexNewAccountName.getText().toString();
 
 
-                if(email.isEmpty()){
-                    Toast.makeText(getActivity(),"Email cant be empty",Toast.LENGTH_LONG).show();
-                } else if(password.isEmpty()){
-                    Toast.makeText(getActivity(),"password cant be empty",Toast.LENGTH_LONG).show();
-                }else if(name.isEmpty()){
-                    Toast.makeText(getActivity(),"name cant be empty",Toast.LENGTH_LONG).show();
-                }else{
+                if (email.isEmpty()) {
+                    Toast.makeText(getActivity(), "Email cant be empty", Toast.LENGTH_LONG).show();
+                } else if (password.isEmpty()) {
+                    Toast.makeText(getActivity(), "password cant be empty", Toast.LENGTH_LONG).show();
+                } else if (name.isEmpty()) {
+                    Toast.makeText(getActivity(), "name cant be empty", Toast.LENGTH_LONG).show();
+                } else {
 
-                    createNewAccount(name,email,password);
+                    createNewAccount(name, email, password);
                 }
             }
         });
@@ -109,56 +114,51 @@ public class CreateNewAccount extends Fragment {
         view.findViewById(R.id.buttonNewAccountCancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-mlistener.createNewAccountToLogin();
+                mlistener.createNewAccountToLogin();
 
 
             }
         });
         return view;
     }
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    void createNewAccount(String name,String email,String password){
-//        mAuth = FirebaseAuth.getInstance();
 
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+    void createNewAccount(String name, String email, String password) {
+
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    Log.d(TAG,"create new Account");
-//
-//                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "create new Account");
+
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setDisplayName(name)
                             .build();
-
-                    user.updateProfile(profileUpdates)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Log.d(TAG, "User profile updated.");
-                                            Toast.makeText(getActivity(),"successful login",Toast.LENGTH_LONG).show();
+                    try {
+                        user.updateProfile(profileUpdates)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "User profile updated.");
+                                            Toast.makeText(getActivity(), "successful login", Toast.LENGTH_LONG).show();
                                             mlistener.OnSuccesfulLogin();
+                                        } else {
+                                            Toast.makeText(getActivity(), "unsuccessful login" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        }
                                     }
-                                    else{
-                                        Toast.makeText(getActivity(),"unsuccessful login"+task.getException().getMessage(),Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
+                                });
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
 
 
-//                    if(currentUser != null){
-//                        String uid= currentUser.getUid();
-//                        Log.d(TAG,"User Id "+uid);
-////                        createNewForumUser(uid,name);
-//                    }
-
-
-                }else{
-                    Log.d(TAG,"Login unSuccesful"+task.getException().getMessage());
-                    String errorMessage =task.getException().getMessage();
-                    AlertDialog.Builder  builder = new AlertDialog.Builder(getActivity());
+                } else {
+                    Log.d(TAG, "Login unSuccesful" + task.getException().getMessage());
+                    String errorMessage = task.getException().getMessage();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                     builder.setMessage(errorMessage).setTitle("Error").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                         @Override
@@ -167,14 +167,12 @@ mlistener.createNewAccountToLogin();
                         }
                     });
                     builder.show();
-
-
                 }
             }
         });
     }
 
-    void createNewForumUser(String uid,String userName){
+    void createNewForumUser(String uid, String userName) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> user = new HashMap<>();
         user.put("createByName", userName);
@@ -185,26 +183,27 @@ mlistener.createNewAccountToLogin();
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG,"createdNew user of name"+userName);
+                        Log.d(TAG, "createdNew user of name" + userName);
                     }
                 });
 
     }
 
- NewAccountListener mlistener;
+    NewAccountListener mlistener;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof LoginFragment.LoginListener){
-            mlistener=(NewAccountListener)context;
-        }else{
-            throw new RuntimeException(context.toString()+"Must implement LoginListener");
+        if (context instanceof LoginFragment.LoginListener) {
+            mlistener = (NewAccountListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + "Must implement LoginListener");
         }
     }
 
     interface NewAccountListener {
         void OnSuccesfulLogin();
+
         void createNewAccountToLogin();
     }
 

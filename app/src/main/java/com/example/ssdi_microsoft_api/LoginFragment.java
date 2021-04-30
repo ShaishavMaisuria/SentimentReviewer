@@ -30,14 +30,21 @@ public class LoginFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /* @onCreate method is called on creation of the fragement
+     *
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
-EditText editTextNewAccountEmailAddress;
+
+    EditText editTextNewAccountEmailAddress;
     EditText editTextNewAccountPassword;
 
+    /* @onCreateView method
+     * On CreateView method is used to inflate and produce all the attach xml and entire code interaction is happened over here
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -49,28 +56,24 @@ EditText editTextNewAccountEmailAddress;
 
         editTextNewAccountEmailAddress.setText("t@t.com");
         editTextNewAccountPassword.setText("test123");
-        //loginUser()
-
-
+        // find the view, use the view to find button, and create Listener whenever button is clicked we login using email and password
         view.findViewById(R.id.buttonNewAccountSubmit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String email= editTextNewAccountEmailAddress.getText().toString();
-                String password= editTextNewAccountPassword.getText().toString();
-
-                if(email.isEmpty()){
-                    Toast.makeText(getActivity(),"Email cant be empty",Toast.LENGTH_LONG).show();
-                } else if(password.isEmpty()){
-                    Toast.makeText(getActivity(),"password cant be empty",Toast.LENGTH_LONG).show();
-                }else{
-                  loginUser(email,password);
-
-//                    loginUser("a@a.com","test123");
+                String email = editTextNewAccountEmailAddress.getText().toString();
+                String password = editTextNewAccountPassword.getText().toString();
+                //performing field validation whether is empty or not
+                if (email.isEmpty()) {
+                    Toast.makeText(getActivity(), "Email cant be empty", Toast.LENGTH_LONG).show();
+                } else if (password.isEmpty()) {
+                    Toast.makeText(getActivity(), "password cant be empty", Toast.LENGTH_LONG).show();
+                } else {
+                    loginUser(email, password);
                 }
             }
         });
-
+        // find the view, use view to find button, and set listener whenever new account login is clicked
         view.findViewById(R.id.buttonCreateNewAccontLogin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,32 +83,35 @@ EditText editTextNewAccountEmailAddress;
 
         return view;
     }
-    private FirebaseAuth mAuth ;
 
+    private FirebaseAuth mAuth;
 
-    void loginUser(String email, String password){
-     // Initialize Firebase Auth
+    /* @LoginUser method
+     * This method interact with Firbase authentication and send the user inputted username and email to login the app
+     */
+    void loginUser(String email, String password) {
+        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.d(TAG,"Inside firebase");
-                if(task.isSuccessful()){
-                    Log.d(TAG,"Login Succesful");
+                Log.d(TAG, "Inside firebase");
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "Login Succesful");
                     FirebaseUser currentUser = mAuth.getCurrentUser();
-                    if(currentUser != null){
-                        String uid= currentUser.getUid();
-                        Log.d(TAG,"User Id "+uid);
-
+                    if (currentUser != null) {
+                        String uid = currentUser.getUid();
+                        Log.d(TAG, "User Id " + uid);
                     }
 
-                        mlistener.OnSuccesfulLogin();
+                    mlistener.OnSuccesfulLogin();
 
-                }else{
-                    Log.d(TAG,"Login unSuccesful"+task.getException().getMessage());
-                    String errorMessage =task.getException().getMessage();
-                    AlertDialog.Builder  builder = new AlertDialog.Builder(getActivity());
+                } else {
+                    // what to do if the login is not successful and show the error reported by firebase
+                    Log.d(TAG, "Login unSuccesful" + task.getException().getMessage());
+                    String errorMessage = task.getException().getMessage();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                     builder.setMessage(errorMessage).setTitle("Error").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                         @Override
@@ -124,18 +130,25 @@ EditText editTextNewAccountEmailAddress;
 
     LoginListener mlistener;
 
+    /* @onAttach
+     * we use this method to connect interface with mainactivity
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof LoginListener){
-            mlistener=(LoginListener)context;
-        }else{
-            throw new RuntimeException(context.toString()+"Must implement LoginListener");
+        if (context instanceof LoginListener) {
+            mlistener = (LoginListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + "Must implement LoginListener");
         }
     }
 
+    /* @LoginListener
+     *  We use this method to interact with main activity to send the data and pass the data around
+     */
     interface LoginListener {
         void OnSuccesfulLogin();
+
         void loginToCreateNewAccount();
     }
 }

@@ -2,14 +2,6 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
 
-
-    <!-- This rectangle for the top arrow edge -->
-    <!-- Its color should be the same as the layout's background -->
-
-
-    <!-- This rectangle for the lower arrow edge -->
-    <!-- Its color should be the same as the layout's background -->
-
     <item
         android:top="1dp"
         android:bottom="10dp"

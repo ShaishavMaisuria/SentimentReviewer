@@ -31,7 +31,6 @@ public class CommentDetailHistoryFragment extends Fragment {
     private static final String TAG = "CommentDetailHistoryFragment";
 
 
-    // TODO: Rename and change types of parameters
     private String mcommentID;
 
 
@@ -57,51 +56,69 @@ public class CommentDetailHistoryFragment extends Fragment {
 
         }
     }
+
     TextView usercommentTextView;
     TextView microsoftApiTextView;
     TextView monkeyAPITextView;
+
     @SuppressLint("LongLogTag")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View  view= inflater.inflate(R.layout.fragment_commonet_detail_history, container, false);
-       Log.d(TAG,"comment ID "+mcommentID);
-        getActivity().setTitle("Selected History Comment");
-       usercommentTextView=view.findViewById(R.id.textViewEachUserComment);
-       microsoftApiTextView=view.findViewById(R.id.textViewMicrosoftEachComment);
-       monkeyAPITextView=view.findViewById(R.id.textViewMonkeyApiEachComment);
-       getfirebaseComment();
+        View view = inflater.inflate(R.layout.fragment_commonet_detail_history, container, false);
+        Log.d(TAG, "comment ID " + mcommentID);
+
+        try {
+            getActivity().setTitle("Selected History Comment");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        usercommentTextView = view.findViewById(R.id.textViewEachUserComment);
+        microsoftApiTextView = view.findViewById(R.id.textViewMicrosoftEachComment);
+        monkeyAPITextView = view.findViewById(R.id.textViewMonkeyApiEachComment);
+        getfirebaseComment();
         return view;
     }
 
-    void getfirebaseComment(){
+    void getfirebaseComment() {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        db.collection("userComments").document(mAuth.getCurrentUser().getUid()).collection("comments").document(mcommentID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @SuppressLint("LongLogTag")
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
 
-                        FirbaseClassMonkeyMicrosoftAPIInformation commentObject=document.toObject(FirbaseClassMonkeyMicrosoftAPIInformation.class);
-                        Log.d(TAG, "commentObject data: " + commentObject.toString());
-                        usercommentTextView.setText(commentObject.userSentence);
-                        microsoftApiTextView.setText("Sentimental Decision = "+commentObject.microsoftAPISentimentalDecision+"Positive = "+ commentObject.microSoftApiArrayPosNegNet.get(0) +"\n Negative = "+
-                                commentObject.microSoftApiArrayPosNegNet.get(1)+"\n Neutral = "+commentObject.microSoftApiArrayPosNegNet.get(2));
-                        monkeyAPITextView.setText("Sentimental Decision = " + commentObject.userSentence + "\n Sentimental Score = "+commentObject.monkeyAPIScore);
+        try {
+            db.collection("userComments").document(mAuth.getCurrentUser().getUid()).collection("comments").document(mcommentID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @SuppressLint("LongLogTag")
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+
+                        if (document.exists()) {
+                            Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+                            FirbaseClassMonkeyMicrosoftAPIInformation commentObject = document.toObject(FirbaseClassMonkeyMicrosoftAPIInformation.class);
+                            Log.d(TAG, "commentObject data: " + commentObject.toString());
+                            usercommentTextView.setText(commentObject.userSentence);
+
+                            String microsoftAPIText = "Sentimental Decision = " + commentObject.microsoftAPISentimentalDecision + "Positive = " + commentObject.microSoftApiArrayPosNegNet.get(0) + "\n Negative = " +
+                                    commentObject.microSoftApiArrayPosNegNet.get(1) + "\n Neutral = " +
+                                    commentObject.microSoftApiArrayPosNegNet.get(2);
+                            String monkeyAPIText = "Sentimental Decision = " + commentObject.userSentence +
+                                    "\n Sentimental Score = " + commentObject.monkeyAPIScore;
+                            microsoftApiTextView.setText(microsoftAPIText);
+                            monkeyAPITextView.setText(monkeyAPIText);
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
                     } else {
-                        Log.d(TAG, "No such document");
+                        Log.d(TAG, "get failed with ", task.getException());
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
 
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 }

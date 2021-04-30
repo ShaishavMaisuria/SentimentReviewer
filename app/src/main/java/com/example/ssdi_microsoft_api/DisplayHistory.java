@@ -62,7 +62,9 @@ public class DisplayHistory extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    /* @onCreate method is called on creation of the fragement
+     *
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,61 +73,85 @@ public class DisplayHistory extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
     UserEachCommentRecylerAdapter adapter;
+    /* @onCreateView method
+     * On CreateView method is used to inflate and produce all the attach xml and entire code interaction is happened over here
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_display_history, container, false);
-        getActivity().setTitle("History");
+        View view = inflater.inflate(R.layout.fragment_display_history, container, false);
+        try {
+            getActivity().setTitle("History");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         getFireStoreUserHistory();
 
         recyclerView = view.findViewById(R.id.recylerViewDisplayHistory);
-        adapter= new UserEachCommentRecylerAdapter(userHistoryListData);
+        adapter = new UserEachCommentRecylerAdapter(userHistoryListData);
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         return view;
     }
+
     ArrayList<FirbaseClassMonkeyMicrosoftAPIInformation> userHistoryListData = new ArrayList<>();
 
-    ArrayList<String> userHistoryCommentsList=new ArrayList<>();
-    void getFireStoreUserHistory(){
+    ArrayList<String> userHistoryCommentsList = new ArrayList<>();
+
+    /**
+     * getFireStoreUserHistory This is method is used to interact with firestore
+     * to obtain the history of the user and format into right object and create arraylist for showing all the information
+     */
+    void getFireStoreUserHistory() {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        db.collection("userComments").document(mAuth.getCurrentUser().getUid()).collection("comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                userHistoryListData.clear();
-                userHistoryCommentsList.clear();
-                for(QueryDocumentSnapshot document: value){
-                    Log.d(TAG,"FireStore Response"+document.getData());
-                    Log.d(TAG,"doucment Comment ID"+document.getId());
-                    FirbaseClassMonkeyMicrosoftAPIInformation commentData=document.toObject(FirbaseClassMonkeyMicrosoftAPIInformation.class);
-                    commentData.setCommentID(document.getId());
-                    userHistoryListData.add(commentData);
-                    userHistoryCommentsList.add(commentData.userSentence);
-
-                    Log.d(TAG,"userHistoryListData commentData "+commentData.toString());
+        try {
 
 
+            db.collection("userComments").document(mAuth.getCurrentUser().getUid()).collection("comments").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    userHistoryListData.clear();
+                    userHistoryCommentsList.clear();
+                    for (QueryDocumentSnapshot document : value) {
+                        Log.d(TAG, "FireStore Response" + document.getData());
+                        Log.d(TAG, "doucment Comment ID" + document.getId());
+                        FirbaseClassMonkeyMicrosoftAPIInformation commentData = document.toObject(FirbaseClassMonkeyMicrosoftAPIInformation.class);
+                        commentData.setCommentID(document.getId());
+                        userHistoryListData.add(commentData);
+                        userHistoryCommentsList.add(commentData.userSentence);
+
+                        Log.d(TAG, "userHistoryListData commentData " + commentData.toString());
+
+
+                    }
+                    adapter.notifyDataSetChanged();
+                    Log.d(TAG, "userhistoryList " + userHistoryListData.toString());
+                    Log.d(TAG, "userHistoryCommentsList " + userHistoryCommentsList.toString());
                 }
-                adapter.notifyDataSetChanged();
-                Log.d(TAG,"userhistoryList "+ userHistoryListData.toString());
-                Log.d(TAG,"userHistoryCommentsList "+userHistoryCommentsList.toString());
-            }
-        });
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
+
     RecyclerView recyclerView;
     LinearLayoutManager mLayoutManager;
 
-    class UserEachCommentRecylerAdapter extends RecyclerView.Adapter<UserEachCommentRecylerAdapter.UserEachCommentRecylerView>{
+    /**
+     * This class is used to show the list of all the comments that is get from firebase
+     */
+    class UserEachCommentRecylerAdapter extends RecyclerView.Adapter<UserEachCommentRecylerAdapter.UserEachCommentRecylerView> {
         ArrayList<FirbaseClassMonkeyMicrosoftAPIInformation> userCommentObject;
 
         public UserEachCommentRecylerAdapter(ArrayList<FirbaseClassMonkeyMicrosoftAPIInformation> userHistoryListData) {
-            this.userCommentObject=userHistoryListData;
+            this.userCommentObject = userHistoryListData;
         }
 
         @NonNull
@@ -139,9 +165,9 @@ public class DisplayHistory extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull UserEachCommentRecylerView holder, int position) {
-            FirbaseClassMonkeyMicrosoftAPIInformation comment=userCommentObject.get(position);
+            FirbaseClassMonkeyMicrosoftAPIInformation comment = userCommentObject.get(position);
             holder.setupNewComments(comment);
-            holder.index=position;
+            holder.index = position;
 
 
         }
@@ -151,25 +177,27 @@ public class DisplayHistory extends Fragment {
             return userCommentObject.size();
         }
 
-        public class UserEachCommentRecylerView extends RecyclerView.ViewHolder{
+        public class UserEachCommentRecylerView extends RecyclerView.ViewHolder {
             FirbaseClassMonkeyMicrosoftAPIInformation userComment;
             TextView textViewdisplayComment;
             int index;
+
             public UserEachCommentRecylerView(@NonNull View itemView) {
                 super(itemView);
-                textViewdisplayComment=itemView.findViewById(R.id.textViewEachComment);
+                textViewdisplayComment = itemView.findViewById(R.id.textViewEachComment);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d(TAG,"adapter Listener"+index);
-                        Log.d(TAG,"Entire Comment Array Object"+userComment.toString());
+                        Log.d(TAG, "adapter Listener" + index);
+                        Log.d(TAG, "Entire Comment Array Object" + userComment.toString());
                         mlistener.displayhistoryCommentDetailHistory(userComment.commentID);
                     }
                 });
             }
-            public void setupNewComments(FirbaseClassMonkeyMicrosoftAPIInformation comment){
-                this.userComment=comment;
+
+            public void setupNewComments(FirbaseClassMonkeyMicrosoftAPIInformation comment) {
+                this.userComment = comment;
                 textViewdisplayComment.setText(this.userComment.userSentence);
 
             }
@@ -179,17 +207,21 @@ public class DisplayHistory extends Fragment {
     }
 
     DisplayHistoryListener mlistener;
-
+    /* @onAttach
+     * we use this method to connect interface with mainactivity
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof DisplayHistoryListener){
-            mlistener=(DisplayHistoryListener)context;
-        }else{
-            throw new RuntimeException(context.toString()+"Must implement DisplayHistoryListener");
+        if (context instanceof DisplayHistoryListener) {
+            mlistener = (DisplayHistoryListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + "Must implement DisplayHistoryListener");
         }
     }
-
+    /* @DisplayHistoryListener
+     *  We use this method to interact with main activity to send the data and pass the data around
+     */
     interface DisplayHistoryListener {
         void displayhistoryCommentDetailHistory(String commentID);
 

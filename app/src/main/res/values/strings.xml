@@ -17,4 +17,21 @@
     <string name="StringCreateNewAccounnt">Create New Account</string>
     <string name="StringEmail">Email</string>
     <string name="StringPassword">Password</string>
+    <string name="UserComment">User Comment</string>
+    <string name="Comment">Comment</string>
+    <string name="MicrosoftAPIReport">Microsoft API Report</string>
+    <string name="MonkeyAPIReport">Monkey API Report</string>
+    <string name="Result">Result</string>
+    <string name="WriteText">Write Text</string>
+    <string name="History">History</string>
+    <string name="PressToGetScore">Press To Get Score</string>
+    <string name="Logout">LOGOUT</string>
+    <string name="APPNAME">Welcome to Reviewer</string>
+
+<!--    JAVA FIle String -->
+    <string name="ToastWriteCommentValidation">Please write something before Submitting</string>
+    <string name="ToastAPIResponse">Waiting For API Response </string>
+
+    <string name="ToastAPILoading">API Loading </string>
+
 </resources>

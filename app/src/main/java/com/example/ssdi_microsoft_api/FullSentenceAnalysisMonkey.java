@@ -9,36 +9,46 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
+/* FullSentenceAnalysisMonkey
+* The purpose of this class is to create object,parse data for monkeyAPi, and get and set all the fields of the class
+ */
 public class FullSentenceAnalysisMonkey {
-    String tag_name,confidence;
+    String tag_name, confidence;
 
     public FullSentenceAnalysisMonkey() {
     }
+/* @FullSentenceAnalysisMonkey
+* This method is used to parse the json data sent from monkey API
+* we use this constructor to populate all the fields for object creation
+ */
     public FullSentenceAnalysisMonkey(JSONArray rootArray) throws JSONException {
 
         JSONObject js = rootArray.getJSONObject(0);
-        Log.d("Monkey"," js Printing RootObject"+js);
-        JSONArray jsArray= js.getJSONArray("classifications");
-        Log.d("Monkey","jsArray Printing RootObject"+jsArray);
-        JSONObject jsArrayObject= jsArray.getJSONObject(0);
-        Log.d("Monkey","jsArrayObject Printing RootObject "+jsArrayObject);
-        String tagnam=jsArrayObject.getString("tag_name");
-        Log.d("Monkey","tag_name Printing RootObject "+tagnam);
-        String confidenc=jsArrayObject.getString("confidence");
-        Log.d("Monkey","Printing confidence "+confidenc);
+        Log.d("Monkey", " js Printing RootObject" + js);
+        JSONArray jsArray = js.getJSONArray("classifications");
+        Log.d("Monkey", "jsArray Printing RootObject" + jsArray);
+        JSONObject jsArrayObject = jsArray.getJSONObject(0);
+        Log.d("Monkey", "jsArrayObject Printing RootObject " + jsArrayObject);
+        String tagnam = jsArrayObject.getString("tag_name");
+        Log.d("Monkey", "tag_name Printing RootObject " + tagnam);
+        String confidenc = jsArrayObject.getString("confidence");
+        Log.d("Monkey", "Printing confidence " + confidenc);
 
-        this.confidence=confidenc;
-        this.tag_name=tagnam;
+        this.confidence = confidenc;
+        this.tag_name = tagnam;
     }
-
+/*toString the textual representation of object
+*
+ */
     @Override
     public String toString() {
         return
                 "sentiment Decision =  " + tag_name + "\n" +
-                "Score = " + confidence;
+                        "Score = " + confidence;
     }
-
+/*
+setters and getter for all the fields
+ */
     public String getTag_name() {
         return tag_name;
     }
@@ -54,20 +64,5 @@ public class FullSentenceAnalysisMonkey {
     public void setConfidence(String confidence) {
         this.confidence = confidence;
     }
-    //  OnSucccesful Moneky Response[{"text":"I hate this and that","external_id":null
-//  ,"error":false,"classifications":[{"tag_name":"Negative","tag_id":122921385,"confidence":0.991}]}]
-//    JSONArray root = res.arrayResult;
-//    JSONArray headOne = (JSONArray) root.get(0);
-//    JSONArray headTwo = (JSONArray) headOne.get(0);
-//        for (Object a : headTwo){
-//        JSONObject c =(JSONObject) a;
-//        System.out.println(c.get("category_id"));
-//    }
-//        System.out.println("");
-
-
-
-
-
 
 }

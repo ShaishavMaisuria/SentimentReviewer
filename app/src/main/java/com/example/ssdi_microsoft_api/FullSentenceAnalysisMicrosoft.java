@@ -11,39 +11,43 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import io.perfmark.Tag;
-
+/* FullSentenceAnalysisMonkey
+ * The purpose of this class is to create object,parse data for Microsft API, and get and set all the fields of the class
+ */
 public class FullSentenceAnalysisMicrosoft {
 
-    private static final String TAG ="FullSentenceAnalysisMicrosoft" ;
-    String id,sentiment,confidenceScores;
+    private static final String TAG = "FullSentenceAnalysisMicrosoft";
+    String id, sentiment, confidenceScores;
     ArrayList<Double> scoreMicrosoftAPI = new ArrayList<>();
-Double positive,neutral,negative;
+    Double positive, neutral, negative;
 
     public FullSentenceAnalysisMicrosoft() {
     }
-
+    /* @FullSentenceAnalysisMicrosoft
+     * This method is used to parse the json data sent from Microsoft API
+     * we use this constructor to populate all the fields for object creation
+     */
     @SuppressLint("LongLogTag")
     public FullSentenceAnalysisMicrosoft(JSONObject body) throws JSONException {
         this.id = body.getString("id");
-        this.sentiment=body.getString("sentiment");
-//        this.confidenceScores=body.getString("confidenceScores");
+        this.sentiment = body.getString("sentiment");
+        this.positive = body.getJSONObject("confidenceScores").getDouble("positive");
+        this.neutral = body.getJSONObject("confidenceScores").getDouble("neutral");
+        this.negative = body.getJSONObject("confidenceScores").getDouble("negative");
 
 
-        this.positive=body.getJSONObject("confidenceScores").getDouble("positive");
-        this.neutral=body.getJSONObject("confidenceScores").getDouble("neutral");
-        this.negative=body.getJSONObject("confidenceScores").getDouble("negative");
-
-
-        JSONObject confidenceScoreObjct= new JSONObject(String.valueOf(body)).getJSONObject("confidenceScores");
+        JSONObject confidenceScoreObjct = new JSONObject(String.valueOf(body)).getJSONObject("confidenceScores");
         Log.d(TAG, "value object");
 
-        this.positive=confidenceScoreObjct.getDouble("positive");
+        this.positive = confidenceScoreObjct.getDouble("positive");
 
         scoreMicrosoftAPI.add(this.positive);
         scoreMicrosoftAPI.add(this.negative);
         scoreMicrosoftAPI.add(this.neutral);
     }
-
+    /*@toStringFull the textual representation of object
+     *
+     */
 
     public String toStringFull() {
         return "FullSentenceAnalysisMicrosoft{" +
@@ -55,19 +59,23 @@ Double positive,neutral,negative;
                 ", negative=" + negative +
                 '}';
     }
-
+    /* toString the textual representation of object
+     *
+     */
     @Override
     public String toString() {
         return
 
-                "sentiment Decision = " + sentiment  +"\n "+
+                "sentiment Decision = " + sentiment + "\n " +
 
-                "positive Score = " + positive +"\n "+
-                "neutral Score = " + neutral +"\n "+
-                "negative Score = " + negative
+                        "positive Score = " + positive + "\n " +
+                        "neutral Score = " + neutral + "\n " +
+                        "negative Score = " + negative
                 ;
     }
-
+    /*
+    setters and getter for all the fields
+     */
     public ArrayList<Double> getScoreMicrosoftAPI() {
         return scoreMicrosoftAPI;
     }
