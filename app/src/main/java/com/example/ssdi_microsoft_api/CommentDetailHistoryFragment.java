@@ -37,7 +37,10 @@ public class CommentDetailHistoryFragment extends Fragment {
     public CommentDetailHistoryFragment() {
         // Required empty public constructor
     }
-
+/**
+ * This method is used to get the comment ID
+ * and populate to the fragment display
+ */
 
     public static CommentDetailHistoryFragment newInstance(String param1) {
         CommentDetailHistoryFragment fragment = new CommentDetailHistoryFragment();
@@ -48,6 +51,9 @@ public class CommentDetailHistoryFragment extends Fragment {
         return fragment;
     }
 
+    /* @onCreate method is called on creation of the fragement
+     *
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +66,9 @@ public class CommentDetailHistoryFragment extends Fragment {
     TextView usercommentTextView;
     TextView microsoftApiTextView;
     TextView monkeyAPITextView;
-
+    /* @onCreateView method
+     * On CreateView method is used to inflate and produce all the attach xml and entire code interaction is happened over here
+     */
     @SuppressLint("LongLogTag")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,6 +89,10 @@ public class CommentDetailHistoryFragment extends Fragment {
         return view;
     }
 
+    /**
+     * This method is used to send request and obtain the user comments of particular selected id. The firebase will than reponse back with request comment information
+     * based on the id
+     */
     void getfirebaseComment() {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -96,11 +108,11 @@ public class CommentDetailHistoryFragment extends Fragment {
 
                         if (document.exists()) {
                             Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-
+                            //object Creation
                             FirbaseClassMonkeyMicrosoftAPIInformation commentObject = document.toObject(FirbaseClassMonkeyMicrosoftAPIInformation.class);
                             Log.d(TAG, "commentObject data: " + commentObject.toString());
                             usercommentTextView.setText(commentObject.userSentence);
-
+                            // creating the display
                             String microsoftAPIText = "Sentimental Decision = " + commentObject.microsoftAPISentimentalDecision + "Positive = " + commentObject.microSoftApiArrayPosNegNet.get(0) + "\n Negative = " +
                                     commentObject.microSoftApiArrayPosNegNet.get(1) + "\n Neutral = " +
                                     commentObject.microSoftApiArrayPosNegNet.get(2);

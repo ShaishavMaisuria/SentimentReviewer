@@ -60,7 +60,9 @@ public class CreateNewAccount extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+    /* @onCreateView method
+     * On CreateView method is used to inflate and produce all the attach xml and entire code interaction is happened over here
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +90,7 @@ public class CreateNewAccount extends Fragment {
         editTexNewAccountName = view.findViewById(R.id.editTexNewAccountName);
         editTextNewAccountPassword = view.findViewById(R.id.editTextNewAccountPassword);
         editTextNewAccountEmailAddress = view.findViewById(R.id.editTextNewAccountEmailAddress);
-
+        // submit the button consist of validation for fields submitted by user
         view.findViewById(R.id.buttonNewAccountSubmit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +99,7 @@ public class CreateNewAccount extends Fragment {
                 String password = editTextNewAccountPassword.getText().toString();
                 String name = editTexNewAccountName.getText().toString();
 
+                // user validation
 
                 if (email.isEmpty()) {
                     Toast.makeText(getActivity(), "Email cant be empty", Toast.LENGTH_LONG).show();
@@ -106,11 +109,13 @@ public class CreateNewAccount extends Fragment {
                     Toast.makeText(getActivity(), "name cant be empty", Toast.LENGTH_LONG).show();
                 } else {
 
+                    //new account creation with fireAuthentication
                     createNewAccount(name, email, password);
                 }
             }
         });
 
+        // cancel button is clicked and trigger to go back to the login page
         view.findViewById(R.id.buttonNewAccountCancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,8 +129,15 @@ public class CreateNewAccount extends Fragment {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+    /**
+     * createNewAccount is used to take user entered fields and provide to firebase Authentication where new user will be created and add to the system with
+     * firbase systems.
+     * @param name, user name
+     * @param email, user email
+     * @param password, user password
+     */
     void createNewAccount(String name, String email, String password) {
-
+        // calling the instance of firebase authentication in order to create new account
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -133,10 +145,12 @@ public class CreateNewAccount extends Fragment {
                     Log.d(TAG, "create new Account");
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    // adding name to the account cant do authomatically needs to be manual
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setDisplayName(name)
                             .build();
                     try {
+                        // working on updating the information
                         user.updateProfile(profileUpdates)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -158,6 +172,7 @@ public class CreateNewAccount extends Fragment {
                 } else {
                     Log.d(TAG, "Login unSuccesful" + task.getException().getMessage());
                     String errorMessage = task.getException().getMessage();
+                    // providing alert in case user authentication fails
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                     builder.setMessage(errorMessage).setTitle("Error").setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -170,23 +185,6 @@ public class CreateNewAccount extends Fragment {
                 }
             }
         });
-    }
-
-    void createNewForumUser(String uid, String userName) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> user = new HashMap<>();
-        user.put("createByName", userName);
-
-        db.collection("forums")
-                .document(uid)
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "createdNew user of name" + userName);
-                    }
-                });
-
     }
 
     NewAccountListener mlistener;

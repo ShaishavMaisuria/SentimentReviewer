@@ -6,6 +6,13 @@ import android.os.Bundle;
 
 /* MainActivity class
  *  This class is used to connect all different fragments with each other using implemetation of interfaces of each fragments
+ * Throgh out the project we  have also implement log to test and check the data passing around methods
+ * we have added all possible places an Exception that could occur
+ * We have also labelled the required methods that needs description
+ *
+ * TWO THINGS to KEEP in mind
+ * 1) APIs KEYS may expire please account me @smaisuri@uncc.edu for the keys of the project APIs
+ * 2) FIREBASE services might stop after 30 days, please contact me @smaisuri@uncc.edu to renew the service ( unfortunately we cannot renew in between)
  */
 public class MainActivity extends AppCompatActivity implements LoginFragment.LoginListener, DisplayHistory.DisplayHistoryListener, CreateNewAccount.NewAccountListener, DisplayScreen.displayScreenListener {
     /* @onCreate method is the main method run whenever the app is started it passess the view from activtiy to activity loginFragment
